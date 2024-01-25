@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -35,6 +38,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
@@ -70,6 +75,13 @@ fun ShoppingList() {
     var quantityValue by remember { mutableStateOf("") }
     //var quantityValueToInt by remember { mutableIntStateOf( quantityValue.toInt()) }
     val quantityValueToInt = quantityValue.toIntOrNull() ?:0
+
+    LazyColumn(modifier = Modifier.padding(8.dp)){
+        items(sItems){
+            ShoppingListItem(it, {}, {})
+        }
+    }
+
     if(showAlertDialog){
         AlertDialog(
 
@@ -136,11 +148,7 @@ fun ShoppingList() {
             }
         )
     }
-    LazyColumn(modifier = Modifier.padding(8.dp)){
-        items(sItems){
 
-        }
-    }
     Row (horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.Bottom){
         ExtendedFloatingActionButton(
@@ -167,5 +175,24 @@ data class ShoppingItems(val id : Int, val name :String, var quantity :Int, val 
 fun ShoppingListPreview(){
     ShoppingList()
 
+}
+
+@Composable
+fun ShoppingListItem(
+    item:ShoppingItems,
+    onEdit:() -> Unit,
+    onDelete:() -> Unit
+){
+    Row(horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+        .padding(8.dp)
+        .fillMaxWidth()
+        .border(border = BorderStroke(2.dp, Color.Gray),shape = RoundedCornerShape(8.dp))
+    )
+    {
+        Text(item.name)
+        Text(item.quantity.toString())
+    }
 }
 
